@@ -6,6 +6,7 @@ from pathlib import Path
 
 def get_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
+
     if logger.handlers:
         return logger
 
