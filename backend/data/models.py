@@ -16,6 +16,7 @@ class HotTopic(Base):
     crawl_time = Column(DateTime, nullable=False, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
+    # 逻辑删除字段
     is_deleted = Column(Boolean, default=False, index=True)
     deleted_at = Column(DateTime, nullable=True)
     deleted_by = Column(String(100), nullable=True)
@@ -64,13 +65,16 @@ class AuditLog(Base):
     __tablename__ = "audit_logs"
 
     id = Column(Integer, primary_key=True, index=True)
-    action = Column(String(50), nullable=False, index=True)
-    entity_type = Column(String(50), nullable=False)
+    action = Column(String(50), nullable=False, index=True)  # DELETE, RESTORE
+    entity_type = Column(String(50), nullable=False)  # HotTopic
     entity_id = Column(Integer, nullable=False, index=True)
     operator = Column(String(100), nullable=False)
     operation_time = Column(DateTime, default=datetime.utcnow, index=True)
     details = Column(Text, nullable=True)
+    
+    # 旧值快照（JSON格式存储）
     old_value = Column(Text, nullable=True)
+    # 新值快照（JSON格式存储）
     new_value = Column(Text, nullable=True)
 
     def to_dict(self):
